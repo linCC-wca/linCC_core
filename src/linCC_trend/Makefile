@@ -1,7 +1,19 @@
 CC=gcc
+CFLAGS=-std=gnu99 -pthread
+INCLUDEDIR=-I./lib/libSQL/ \
+	-I./lib/ \
+	-I./error/ \
+	-I./lib/libLog/
+SOURCES=main.c \
+	lib/libSQL/dbAccess.c \
+	lib/libLog/libLog.c \
+	lib/getTrend.c \
+	lib/getTriggers.c
+OUTFILE=linCC_trend
+MYSQLLIBS=`mysql_config --include --libs`
 
 all:
-	$(CC) main.c lib/libSQL/dbAccess.c lib/libLog/libLog.c lib/getTrend.c lib/getTriggers.c -o linCC_trend `mysql_config --include --libs` -lsnap7 -I./lib/libSQL/ -I./lib/ -I./error/ -I./lib/libLog/ -std=gnu99 -pthread
-# $(CC) main.c lib/dbAccess.c lib/db_varTag.c lib/libPLC.c lib/snap7.c -o linCC `mysql_config --include --libs` -lsnap7 -I./lib/ -std=gnu99
+	$(CC) $(SOURCES) -o $(OUTFILE) $(MYSQLLIBS) -lsnap7 $(INCLUDEDIR) $(CFLAGS)
 clean:
-	rm linCC
+	@rm -f $(OUTFILE)
+	@echo 'cleaned!'
